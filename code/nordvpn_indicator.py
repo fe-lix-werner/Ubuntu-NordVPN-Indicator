@@ -1,7 +1,6 @@
 #!/usr/bin/python
 """
-Adds icon to notification tray that allows for connecting
-and disconnecting to NordVPN
+Adds icon to notification tray that shows the  status of nordvpn. 
 """
 
 import os
@@ -61,7 +60,8 @@ class Indicator(object):
         Updates the icon and the menu status item
         """
         status = self.nordvpn.get_status()
-        self.status_label.set_label(status.raw_status)
+        self.status_label.set_label('Status:\n'+'C' + status.raw_status.split('C',1)[-1])
+        print(self.status_label.get_label())
         self.indicator.set_icon_full(self.get_icon_path(status.data[NordVPNStatus.Param.STATUS]),'')
 
     @staticmethod
@@ -85,13 +85,14 @@ class Indicator(object):
         Builds menu for the tray icon
         """
         main_menu = gtk.Menu()
-
+        
+        """
         # Create a Connect submenu
         menu_connect = gtk.Menu()
         item_connect = gtk.MenuItem(label='Connect')
         item_connect.set_submenu(menu_connect)
         main_menu.append(item_connect)
-
+       
         # First item is to connect automatically
         item_connect_auto = gtk.MenuItem(label='Auto')
         item_connect_auto.connect('activate', self.auto_connect_cb)
@@ -140,23 +141,23 @@ class Indicator(object):
         item_disconnect = gtk.MenuItem(label='Disconnect')
         item_disconnect.connect('activate', self.nordvpn.disconnect)
         main_menu.append(item_disconnect)
-
+        
         # Create a submenu for the connection status
         menu_status = gtk.Menu()
         item_status = gtk.MenuItem(label='Status')
         item_status.set_submenu(menu_status)
         main_menu.append(item_status)
-
+        """
         # Add a label to show the current status details
-        self.status_label = gtk.MenuItem(label='')
-        menu_status.append(self.status_label)
-        self.status_label.set_sensitive(False)
-
+        self.status_label = gtk.MenuItem(label=self.nordvpn.get_status().raw_status.strip())
+        main_menu.append(self.status_label)
+        # self.status_label.set_sensitive(False)
+        """
         # Define the Settings menu entry
         item_settings = gtk.MenuItem(label='Settings...')
         item_settings.connect('activate', self.display_settings_window)
         main_menu.append(item_settings)
-
+        """
         item_quit = gtk.MenuItem(label='Quit')
         item_quit.connect('activate', self.quit)
         main_menu.append(item_quit)

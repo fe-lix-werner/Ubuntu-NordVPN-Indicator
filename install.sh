@@ -1,35 +1,5 @@
 #!/bin/bash
 
-install_client()
-{
-    # Get NordVPN Repo Setup (https://nordvpn.com/download/linux/)
-    echo "Getting the NordVPN Repo Setup"
-    wget https://repo.nordvpn.com/deb/nordvpn/debian/pool/main/nordvpn-release_1.0.0_all.deb
-
-    # Install downloaded package
-    echo "Installing the NordVPN Repo Setup"
-    sudo apt-get install -y nordvpn-release_1.0.0_all.deb
-    rm nordvpn-release_1.0.0_all.deb
-
-    # Update packages
-    echo "Updating packages"
-    sudo apt-get update
-
-    # Install NordVPN
-    echo "Installing NordVPN"
-    sudo apt-get install -y nordvpn
-
-    # Prompting user to login
-    echo "Logging into NordVPN"
-    nordvpn login
-}
-
-install_deps()
-{
-    # Install gir1.2-appindicator
-    echo "Installing AppIndicator and Python-GI"
-    sudo apt-get install -y gir1.2-appindicator python-gi
-}
 
 install_indicator()
 {
@@ -44,11 +14,16 @@ install_indicator()
     cp ubuntu-nordvpn-indicator.desktop $HOME/.config/autostart/
 }
 
-# Install client if not present
-if ! command -v nordvpn > /dev/null 2>&1;
-then
-    install_client
-fi
+install_deps()
+{
+    # Install gir1.2-appindicator
+    echo "Installing AppIndicator and Python-GI"
+    sudo apt-get install -y gir1.2-appindicator python-gi
+}
+
+
+# Install indicator
+install_indicator
 
 # Install dependencies if not present
 deps_available=$(dpkg -l | grep -E "gir1.2-appindicator-|python-gi"  | wc --lines)
@@ -58,10 +33,6 @@ then
 else
     install_deps
 fi
-
-# Install indicator
-install_indicator
-
 # Starting script
 if pgrep -f "nordvpn_indicator" > /dev/null
 then

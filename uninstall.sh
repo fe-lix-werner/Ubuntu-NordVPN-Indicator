@@ -19,15 +19,3 @@ then
     echo "Uninstalling Python-GI"
     sudo apt-get remove -y python-gi
 fi
-
-
-read -p "Do you want to uninstall NordVPN? [Y/n]" -n 1 -r
-echo
-if [[ $REPLY =~ ^[Yy]$ ]]
-then
-    echo "Disconnecting NordVPN"
-    nordvpn disconnect
-
-    echo "Uninstalling NordVPN"
-    sudo apt-get remove -y nordvpn
-fi
