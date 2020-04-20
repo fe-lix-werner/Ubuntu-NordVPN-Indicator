@@ -60,10 +60,7 @@ class Indicator(object):
         Updates the icon and the menu status item
         """
         status = self.nordvpn.get_status()
-        if status.data[NordVPNStatus.Param.STATUS] == ConnectionStatus.DISCONNECTED:
-            self.status_label.set_label('Status:\n'+'D' + status.raw_status.split('D',1)[-1])
-        else:
-            self.status_label.set_label('Status:\n'+'C' + status.raw_status.split('C',1)[-1])
+        self.status_label.set_label(status.get_label_status())
         self.indicator.set_icon_full(self.get_icon_path(status.data[NordVPNStatus.Param.STATUS]),'')
 
     @staticmethod
